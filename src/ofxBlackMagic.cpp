@@ -10,16 +10,23 @@ ofxBlackMagic::ofxBlackMagic()
 ,colorTexOld(true) {
 }
 
-bool ofxBlackMagic::setup(int width, int height, float framerate) {
+bool ofxBlackMagic::setup(int _deviceID, int width, int height, string framerate) {
 	if(!controller.init()) {
 		return false;
 	}
-	controller.selectDevice(0);
+	controller.selectDevice(_deviceID);
+    
+    deviceID = _deviceID;
+    
 	vector<string> displayModes = controller.getDisplayModeNames();
 	ofLogVerbose("ofxBlackMagic") << "Available display modes: " << ofToString(displayModes);
 	BMDDisplayMode displayMode = bmdModeUnknown;
-	if(width == 1920 && height == 1080 && framerate == 30) {
+	if(width == 1920 && height == 1080 && framerate == "30") {
 		displayMode = bmdModeHD1080p30;
+	}else if(width == 1920 && height == 1080 && framerate == "60") {
+		displayMode = bmdModeHD1080i6000;
+	}else if(width == 1920 && height == 1080 && framerate == "59.94") {
+		displayMode = bmdModeHD1080i5994;
 	} else {
 		ofLogError("ofxBlackMagic") << "ofxBlackMagic needs to be updated to support that mode.";
 		return false;
@@ -106,3 +113,46 @@ void ofxBlackMagic::drawGray() {
 void ofxBlackMagic::drawColor() {
 	getColorTexture().draw(0, 0);
 }
+
+int ofxBlackMagic::getWidth()
+{
+    return width;
+}
+
+int ofxBlackMagic::getHeight()
+{
+    return height;
+}
+
+int ofxBlackMagic::getConnectedDeviceNum()
+{
+    return controller.getDeviceCount();
+}
+
+
+string ofxBlackMagic::getDeviceName()
+{
+    
+    string str = "NAN_ERROR";
+    if(controller.getDeviceNameList().size() > deviceID)
+    {
+        str = controller.getDeviceNameList().at(deviceID);
+    }
+    
+    return str;
+}
+
+string ofxBlackMagic::getDisplayModeName()
+{
+    
+    string str = "NAN_ERROR";
+    if(controller.getDisplayModeNames().size() > deviceID)
+    {
+        str = controller.getDisplayModeNames().at(deviceID);
+    }
+    
+    return str;
+}
+
+
+

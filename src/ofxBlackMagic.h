@@ -19,11 +19,13 @@ private:
 	bool yuvTexOld, grayTexOld, colorTexOld;
 	ofTexture yuvTex, grayTex, colorTex;
 	
-	int width, height;
+	int width, height, deviceID;
 	
 public:
 	ofxBlackMagic();
-	bool setup(int width, int height, float framerate);
+    
+	bool setup(int deviceID, int width, int height, string framerate);    //shks
+    //	bool setup(int width, int height, float framerate);
 	void close(); // should call this in ofApp::exit()
 	bool update(); // returns true if there is a new frame
 	
@@ -38,4 +40,13 @@ public:
 	void drawYuv(); // fastest
 	void drawGray(); // fast
 	void drawColor(); // slower
+
+    //added by SHKS
+    int         getWidth();
+    int         getHeight();
+    
+    int         getConnectedDeviceNum();
+    string      getDeviceName();
+    string      getDisplayModeName();
+    
 };
